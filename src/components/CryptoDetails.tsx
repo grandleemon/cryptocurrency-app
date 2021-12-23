@@ -5,10 +5,30 @@ import millify from "millify";
 import { Col, Row, Typography, Select } from "antd";
 import { MoneyCollectOutlined, DollarCircleOutlined, FundOutlined, ExclamationCircleOutlined, StopOutlined, TrophyOutlined, CheckOutlined, NumberOutlined, ThunderboltOutlined } from '@ant-design/icons';
 
-import { useGetCryptoDetailsQuery } from '../services/cryptoApi'
+import { useGetCryptoDetailsQuery, useGetCryptoHistoryQuery } from '../services/cryptoApi'
+import LineChart from "./LineChart";
 
 const { Title, Text } = Typography;
 const { Option } = Select;
+
+interface ICrypto {
+    description: string
+    price: number
+    volume: number
+    rank: number
+    marketCap: number
+    allTimeHigh: {
+        price: number
+    }
+    numberOfMarkets: number
+    numberOfExchanges: number
+    approvedSupply: boolean
+    totalSupply: number
+    circulatingSupply: number
+    name: string
+    slug: string
+    links: {name: string, type: string, url: string}[]
+}
 
 
 
@@ -17,7 +37,10 @@ const CryptoDetails:React.FC = () => {
     const { coinId } = useParams()
     const [timePeriod, setTimePeriod] = useState('7d')
     const { data, isFetching } = useGetCryptoDetailsQuery(coinId)
-    const cryptoDetails = data?.data?.coin
+    const { data: coinHistory} = useGetCryptoHistoryQuery({ coinId, timePeriod })
+    const cryptoDetails: ICrypto = data?.data?.coin
+
+    console.log(coinHistory)
 
     const time = ['3h', '24h', '7d', '30d', '1y', '3m', '3y', '5y'];
 
@@ -33,9 +56,10 @@ const CryptoDetails:React.FC = () => {
         { title: 'Number Of Markets', value: cryptoDetails?.numberOfMarkets, icon: <FundOutlined /> },
         { title: 'Number Of Exchanges', value: cryptoDetails?.numberOfExchanges, icon: <MoneyCollectOutlined /> },
         { title: 'Approved Supply', value: cryptoDetails?.approvedSupply ? <CheckOutlined /> : <StopOutlined />, icon: <ExclamationCircleOutlined /> },
-        { title: 'Total Supply', value: `$ ${millify(cryptoDetails?.totalSupply)}`, icon: <ExclamationCircleOutlined /> },
-        { title: 'Circulating Supply', value: `$ ${millify(cryptoDetails?.circulatingSupply)}`, icon: <ExclamationCircleOutlined /> },
+        { title: 'Total Supply', value: `$ ${ cryptoDetails?.totalSupply && millify(cryptoDetails?.totalSupply)}`, icon: <ExclamationCircleOutlined /> },
+        { title: 'Circulating Supply', value: `$ ${ cryptoDetails?.circulatingSupply && millify(cryptoDetails?.circulatingSupply)}`, icon: <ExclamationCircleOutlined /> },
     ];
+
 
     return (
         <Col className="coin-detail-container">
@@ -56,7 +80,7 @@ const CryptoDetails:React.FC = () => {
                 >
                     {time.map( (date) => <Option value={date} key={date}>{date}</Option>)}
                 </Select>
-                {/*    line chart*/}
+                <LineChart coinHistory={coinHistory} currentPrice={millify(cryptoDetails.price)} coinName={cryptoDetails.name}/>
                 <Col className="stats-container">
                     <Col className="coin-value-statistics">
                         <Col className="coin-value-statistics-heading">
@@ -98,6 +122,25 @@ const CryptoDetails:React.FC = () => {
                     </Col>
                 </Col>
             </div>}
+            <Col className="coin-desc-link">
+                <Row className="coin-desc">
+                    <Title level={3} className="coin-details-heading">
+                        What is {cryptoDetails?.name}
+                        {/*{HTMLReactParser(cryptoDetails?.description)}*/}
+                    </Title>
+                </Row>
+                <Col className="coin-links">
+                    <Title className="coin-details-heading" level={3}>
+                        {cryptoDetails?.name} Links
+                    </Title>
+                    {cryptoDetails?.links.map( (link) => (
+                        <Row className="coin-link" key={link.name}>
+                            <Title level={5} className="link-name">{link.type}</Title>
+                            <a href={link.url} target="_blank" rel="noreferrer">{link.name}</a>
+                        </Row>
+                    ) )}
+                </Col>
+            </Col>
         </Col>
     );
 };
