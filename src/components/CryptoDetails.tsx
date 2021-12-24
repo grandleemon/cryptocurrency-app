@@ -30,7 +30,7 @@ interface ICrypto {
     links: {name: string, type: string, url: string}[]
 }
 
-
+const time = ['3h', '24h', '7d', '30d', '1y', '3m', '3y', '5y'];
 
 
 const CryptoDetails:React.FC = () => {
@@ -38,11 +38,12 @@ const CryptoDetails:React.FC = () => {
     const [timePeriod, setTimePeriod] = useState('7d')
     const { data, isFetching } = useGetCryptoDetailsQuery(coinId)
     const { data: coinHistory} = useGetCryptoHistoryQuery({ coinId, timePeriod })
+
     const cryptoDetails: ICrypto = data?.data?.coin
 
-    console.log(coinHistory)
+    console.log(cryptoDetails)
 
-    const time = ['3h', '24h', '7d', '30d', '1y', '3m', '3y', '5y'];
+    //useMemo
 
     const stats = [
         { title: 'Price to USD', value: `$ ${cryptoDetails?.price && millify(cryptoDetails?.price)}`, icon: <DollarCircleOutlined /> },
@@ -126,7 +127,7 @@ const CryptoDetails:React.FC = () => {
                 <Row className="coin-desc">
                     <Title level={3} className="coin-details-heading">
                         What is {cryptoDetails?.name}
-                        {/*{HTMLReactParser(cryptoDetails?.description)}*/}
+                        {cryptoDetails?.description ? HTMLReactParser(cryptoDetails.description) : "error"}
                     </Title>
                 </Row>
                 <Col className="coin-links">

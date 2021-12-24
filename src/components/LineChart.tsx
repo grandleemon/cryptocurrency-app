@@ -1,10 +1,18 @@
-import React from 'react';
-import { Line } from 'react-chartjs-2'
+import React, {useEffect, useState} from 'react';
+import { Line } from 'react-chartjs-2'  //high charts
+import { CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    Title as ChartTitle,
+    Tooltip,
+    Legend, Chart as ChartJS } from "chart.js";
+
 import { Col, Row, Typography } from "antd";
 
 const { Title } = Typography
 
-interface ILineChartProps {
+interface CoinLineChartProps {
     coinHistory: {
         data: {
             change: number
@@ -13,21 +21,48 @@ interface ILineChartProps {
     }
     currentPrice: string
     coinName: string
-
 }
 
-const LineChart: React.FC<ILineChartProps> = ( {coinHistory, coinName, currentPrice} ) => {
+ChartJS.register(
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    ChartTitle,
+    Tooltip,
+    Legend
+);
 
-    const coinPrice = []
-    const coinTimestamp = []
+const LineChart: React.FC<CoinLineChartProps> = ( {coinHistory, coinName, currentPrice} ) => {
 
-    for (let i = 0; i < coinHistory?.data?.history?.length; i += 1) {
-        coinPrice.push(coinHistory?.data?.history[i].price);
-    }
+    const [coinPrice, setCoinPrice] = useState<number[]>([])
+    const [coinTimestamp, setCoinTimestamp] = useState<string[]>([])
+    const history = coinHistory?.data?.history;
+    // const coinPrice = []
+    // const coinTimestamp = []
 
-    for (let i = 0; i < coinHistory?.data?.history?.length; i += 1) {
-        coinTimestamp.push(new Date(coinHistory?.data?.history[i].timestamp).toLocaleDateString());
-    }
+    useEffect( () => {
+        if(history){
+            const newPrices = [];
+            const newTimestamps = [];
+            for (let i = 0; i < history.length; i++) {
+                newPrices.push(Number(history[i].price));
+                newTimestamps.push(new Date(history[i].timestamp).toLocaleDateString())
+            }
+            setCoinPrice(newPrices);
+            setCoinTimestamp(newTimestamps)
+        }
+    }, [history])
+
+
+
+    // for (let i = 0; i < coinHistory?.data?.history?.length; i += 1) {
+    //     coinPrice.push(coinHistory?.data?.history[i].price);
+    // }
+    //
+    // for (let i = 0; i < coinHistory?.data?.history?.length; i += 1) {
+    //     coinTimestamp.push(new Date(coinHistory?.data?.history[i].timestamp).toLocaleDateString());
+    // }
 
     const data = {
         labels: coinTimestamp,
@@ -68,9 +103,9 @@ const LineChart: React.FC<ILineChartProps> = ( {coinHistory, coinName, currentPr
                     <Title level={5} className="current-price">Current {coinName} Price: $ {currentPrice}</Title>
                 </Col>
             </Row>
-            {/*<Line data={data}*/}
-            {/*      options={options}*/}
-            {/*      type="line"/>*/}
+            <Line data={data}
+                  options={options as any}
+                  />
         </div>
     );
 };
