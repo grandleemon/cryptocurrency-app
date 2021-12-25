@@ -22,11 +22,11 @@ const Homepage: React.FC = () => {
             <Title level={2} className="heading">Global Crypto Stats</Title>
             { isFetching ? 'loading...' : <Row>
                 <Col span={12}>
-                    <Statistic title="Total cryptocurrencies" value={globalStats.total} />
-                    <Statistic title="Total exchanges" value={millify(globalStats.totalExchanges)} />
-                    <Statistic title="Total market cap" value={millify(globalStats.totalMarketCap)} />
-                    <Statistic title="Total 24h volume" value={millify(globalStats.total24hVolume)} />
-                    <Statistic title="Total markets" value={millify(globalStats.totalMarkets)} />
+                    <Statistic title="Total cryptocurrencies" value={globalStats?.total} />
+                    <Statistic title="Total exchanges" value={globalStats?.totalExchanges && millify(globalStats?.totalExchanges)} />
+                    <Statistic title="Total market cap" value={globalStats?.totalMarketCap && millify(globalStats?.totalMarketCap)} />
+                    <Statistic title="Total 24h volume" value={globalStats?.total24hVolume && millify(globalStats?.total24hVolume)} />
+                    <Statistic title="Total markets" value={globalStats?.totalMarkets && millify(globalStats?.totalMarkets)} />
                 </Col>
             </Row> }
 
