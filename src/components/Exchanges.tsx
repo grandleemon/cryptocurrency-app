@@ -53,7 +53,7 @@ const Exchanges:React.FC = () => {
                                     </Row>
                                 )}
                             >
-                                {exchange?.description ? HTMLReactParser(exchange.description) : ''}
+                                {exchange?.description ? HTMLReactParser(exchange.description) : 'No description'}
                             </Panel>
                         </Collapse>
                     </Col>

@@ -39,6 +39,24 @@ a:hover{
     margin-left: 13%;
     padding: 20px;
 }
+
+@media (max-width: 800px) {
+    .routes{
+        margin-left: 0;
+    }
+}
+
+@media (min-width: 801px) and (max-width: 1440px) {
+    .routes{
+        margin-left: 20%;
+    }
+}
+
+@media (min-width:1441px) and (max-width: 1800px){
+    .routes{
+        margin-left: 18%;
+    }
+}
 .nav-container{
     position: fixed;
     width: 250px;
