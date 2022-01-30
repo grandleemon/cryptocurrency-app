@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import { Line } from 'react-chartjs-2'  //high charts
-import { CategoryScale,
+import { Chart,
+    CategoryScale,
     LinearScale,
     PointElement,
     LineElement,
@@ -9,6 +10,7 @@ import { CategoryScale,
     Legend, Chart as ChartJS } from "chart.js";
 
 import { Col, Row, Typography } from "antd";
+import moment from 'moment';
 
 const { Title } = Typography
 
@@ -23,15 +25,7 @@ interface CoinLineChartProps {
     coinName: string
 }
 
-ChartJS.register(
-    CategoryScale,
-    LinearScale,
-    PointElement,
-    LineElement,
-    ChartTitle,
-    Tooltip,
-    Legend
-);
+Chart.register(LineElement, PointElement, LinearScale, ChartTitle, CategoryScale);
 
 const LineChart: React.FC<CoinLineChartProps> = ( {coinHistory, coinName, currentPrice} ) => {
 
@@ -47,9 +41,10 @@ const LineChart: React.FC<CoinLineChartProps> = ( {coinHistory, coinName, curren
             const newTimestamps = [];
             for (let i = 0; i < history.length; i++) {
                 newPrices.push(Number(history[i].price));
-                newTimestamps.push(new Date(history[i].timestamp).toLocaleDateString())
+                newTimestamps.push(moment(history[i].timestamp).format('ll'))
             }
             setCoinPrice(newPrices);
+            console.log(newTimestamps)
             setCoinTimestamp(newTimestamps)
         }
     }, [history])
@@ -79,18 +74,16 @@ const LineChart: React.FC<CoinLineChartProps> = ( {coinHistory, coinName, curren
 
     const options = {
         scales: {
-            yAxes: [
+            x: [
                 {
-                    id: "y",
-                    display: true,
-                    ticks: {
-                        beginAtZero: true
+                type: 'time',
+                time: {
+                    unit: 'month'
                     }
                 }
             ]
         }
     }
-
 
     return (
         <div>
@@ -104,7 +97,7 @@ const LineChart: React.FC<CoinLineChartProps> = ( {coinHistory, coinName, curren
                 </Col>
             </Row>
             <Line data={data}
-                  options={options as any}
+                //   options={options as any}
                   />
         </div>
     );

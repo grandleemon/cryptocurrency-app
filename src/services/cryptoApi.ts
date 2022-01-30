@@ -15,7 +15,7 @@ export const cryptoApi = createApi({
     baseQuery: fetchBaseQuery({ baseUrl }),
     endpoints: ( build ) => ({
         getCryptos: build.query({
-            query: (count) => createRequest(`/coins?limit=${count}`)
+            query: (count) => createRequest(`/coins?referenceCurrencyUuid=yhjMzLPhuIDl&timePeriod=24h&tiers=1&orderBy=marketCap&orderDirection=desc&limit=${count}&offset=0`)
         }),
         getExchanges: build.query({
             query: () => createRequest(`/exchanges`)
@@ -24,7 +24,7 @@ export const cryptoApi = createApi({
             query: (coinId) => createRequest(`/coin/${coinId}`)
         }),
         getCryptoHistory: build.query({
-            query: ({ coinId, timePeriod }) => createRequest(`/coin/${coinId}/history/${timePeriod}`)
+            query: ({ coinId, timePeriod }) => createRequest(`/coin/${coinId}/history?timePeriod=${timePeriod}`)
         }),
     })
 })

@@ -36,14 +36,10 @@ interface INews {
 const demoImage = 'https://www.bing.com/th?id=OVFT.mpzuVZnv8dwIMRfQGPbOPC&pid=News'
 
 
-const News = ( { simplified }:NewsProps ) => {
+const News = ({ simplified }:NewsProps ) => {
     const [newsCategory, setNewsCategory] = useState('Cryptocurrency')
     const { data: cryptoNews, isFetching } = useGetCryptoNewsQuery( {newsCategory, count: simplified ? 6 : 100} );
     const { data } = useGetCryptosQuery(100);
-
-
-
-    console.log(cryptoNews)
 
     return (
         <div>

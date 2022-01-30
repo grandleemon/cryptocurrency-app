@@ -23,10 +23,12 @@ interface ICrypto {
     numberOfMarkets: number
     numberOfExchanges: number
     approvedSupply: boolean
-    totalSupply: number
-    circulatingSupply: number
+    supply: {
+        total: number
+        circulating: number
+    }
     name: string
-    slug: string
+    symbol: string
     links: {name: string, type: string, url: string}[]
 }
 
@@ -41,14 +43,11 @@ const CryptoDetails:React.FC = () => {
 
     const cryptoDetails: ICrypto = data?.data?.coin
 
-    console.log(cryptoDetails)
-
     //useMemo
 
     const stats = [
         { title: 'Price to USD', value: `$ ${cryptoDetails?.price && millify(cryptoDetails?.price)}`, icon: <DollarCircleOutlined /> },
         { title: 'Rank', value: cryptoDetails?.rank, icon: <NumberOutlined /> },
-        { title: '24h Volume', value: `$ ${cryptoDetails?.volume && millify(cryptoDetails?.volume)}`, icon: <ThunderboltOutlined /> },
         { title: 'Market Cap', value: `$ ${cryptoDetails?.marketCap && millify(cryptoDetails?.marketCap)}`, icon: <DollarCircleOutlined /> },
         { title: 'All-time-high(daily avg.)', value: `$ ${cryptoDetails?.allTimeHigh.price && millify(cryptoDetails?.allTimeHigh.price)}`, icon: <TrophyOutlined /> },
     ];
@@ -57,8 +56,8 @@ const CryptoDetails:React.FC = () => {
         { title: 'Number Of Markets', value: cryptoDetails?.numberOfMarkets, icon: <FundOutlined /> },
         { title: 'Number Of Exchanges', value: cryptoDetails?.numberOfExchanges, icon: <MoneyCollectOutlined /> },
         { title: 'Approved Supply', value: cryptoDetails?.approvedSupply ? <CheckOutlined /> : <StopOutlined />, icon: <ExclamationCircleOutlined /> },
-        { title: 'Total Supply', value: `$ ${ cryptoDetails?.totalSupply && millify(cryptoDetails?.totalSupply)}`, icon: <ExclamationCircleOutlined /> },
-        { title: 'Circulating Supply', value: `$ ${ cryptoDetails?.circulatingSupply && millify(cryptoDetails?.circulatingSupply)}`, icon: <ExclamationCircleOutlined /> },
+        { title: 'Total Supply', value: `$ ${ cryptoDetails?.supply?.total && millify(cryptoDetails?.supply?.total)}`, icon: <ExclamationCircleOutlined /> },
+        { title: 'Circulating Supply', value: `$ ${ cryptoDetails?.supply?.circulating && millify(cryptoDetails?.supply?.circulating)}`, icon: <ExclamationCircleOutlined /> },
     ];
 
 
@@ -67,7 +66,7 @@ const CryptoDetails:React.FC = () => {
             {isFetching ? "loading..." : <div>
                 <Col className="coin-heading-container">
                     <Title level={2} className="coin-name">
-                        {cryptoDetails?.name} ({cryptoDetails?.slug}) Price
+                        {cryptoDetails?.name} ({cryptoDetails?.symbol}) Price
                     </Title>
                     <p>
                         {cryptoDetails?.name} live price in US dollars.
