@@ -7,7 +7,7 @@ import { Provider } from "react-redux";
 import 'antd/dist/antd.css'
 
 ReactDOM.render(
-    <Router>
+    <Router basename="/cryptocurrency-app">
         <Provider store={store}>
             <App />
         </Provider>

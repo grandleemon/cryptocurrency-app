@@ -27,7 +27,7 @@ const Exchanges:React.FC = () => {
 
     return (
         <div>
-            <Row>
+            <Row className="">
                 <Col span={6}>Exchanges</Col>
                 <Col span={6}>24h Trade Volume</Col>
                 <Col span={6}>Markets</Col>
